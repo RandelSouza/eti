@@ -21,7 +21,7 @@ WHERE
 	supervisores.salario > 5000
 
 --------------------------------------------------------------------------------
--- 3. Liste o nome e salário de todos os empregados que ganham mais que o seu supervisor.  
+-- 3. Liste o nome e salÃ¡rio de todos os empregados que ganham mais que o seu supervisor.  
 SELECT
     emp.enome   EMPREGADO_NOME,
 	emp.salario EMPREGADO_SALARIO
@@ -40,7 +40,7 @@ FROM
 	INNER JOIN projeto proj ON dep.dnum = proj.numdept
 
 --------------------------------------------------------------------------------
--- 5.  Liste  os  nomes  dos  projetos  que  têm  um  empregado  chamado  “JOAO  SILVA”  que  trabalha  no projeto ou gerencia o departamento que controla o projeto.  
+-- 5.  Liste  os  nomes  dos  projetos  que  tÃªm  um  empregado  chamado  â€œJOAO  SILVAâ€  que  trabalha  no projeto ou gerencia o departamento que controla o projeto.  
 SELECT 
 	proj.pnome PROJETO,
 	ger.enome NOME --GERENTE 
@@ -64,7 +64,7 @@ WHERE
 	emp.enome = 'JOAO SILVA'
 
 --------------------------------------------------------------------------------
--- 6. CPF dos empregados que não trabalham em nenhum projeto
+-- 6. CPF dos empregados que nÃ£o trabalham em nenhum projeto
 SELECT 
 	emp.cpf
 FROM
@@ -84,10 +84,34 @@ WHERE
 --------------------------------------------------------------------------------
 -- 8. CPF dos empregados que trabalham em todos os projetos.
 
---						PENDENTE
+SELECT
+	E.cpf
+FROM 	
+	empregados E 
+WHERE 
+	NOT EXISTIS (
+	(
+		SELECT
+			P.pnumero 
+		FROM 
+			projetos P
+	)
+EXCEPT
+	(
+		SELECT
+			T.pnumero 
+		FROM
+			trabalha T 
+		WHERE
+			T.cpf_emp = E.cpf
+	)
+);
+
+
+--	TESTADO NO POSTGRES
 
 --------------------------------------------------------------------------------
--- 9. Liste os nome e salário de  todos os empregados e no caso de ser um gerente,  liste o departamento que gerencia.
+-- 9. Liste os nome e salÃ¡rio de  todos os empregados e no caso de ser um gerente,  liste o departamento que gerencia.
 SELECT 
 	emp.enome NOME,
 	emp.salario,
@@ -97,7 +121,7 @@ FROM
 	LEFT JOIN departamento dep ON emp.cpf = dep.gerente
 
 --------------------------------------------------------------------------------
--- 10. Liste o nome dos empregados no departamento 'TRANSPORTE' que tem o maior salário.
+-- 10. Liste o nome dos empregados no departamento 'TRANSPORTE' que tem o maior salÃ¡rio.
 SELECT 
 	emp.enome NOME 
 FROM
@@ -105,10 +129,10 @@ FROM
 	LEFT JOIN departamento dep ON emp.cpf = dep.gerente 
 WHERE 
 	dep.dnome = 'TRANSPORTE'
--- ?? Como pegar os maiores salários ?? Max?
+-- ?? Como pegar os maiores salÃ¡rios ?? Max?
 
 --------------------------------------------------------------------------------
--- 11. Qual é a média de salário dos empregados no departamento 'VENDAS'?
+-- 11. Qual Ã© a mÃ©dia de salÃ¡rio dos empregados no departamento 'VENDAS'?
 SELECT 
 	AVG(emp.salario) MEDIA
 FROM
@@ -118,7 +142,7 @@ WHERE
 	dep.dnome = 'VENDAS'
 
 --------------------------------------------------------------------------------
--- 12. Para cada empregado obtenha o número de projetos que ele trabalha e o total de horas que trabalha nestes projetos.
+-- 12. Para cada empregado obtenha o nÃºmero de projetos que ele trabalha e o total de horas que trabalha nestes projetos.
 SELECT 
 	emp.enome EMPREGADO, 
 	COUNT(proj.pnum) QTD_PROJETOS, 
@@ -145,7 +169,7 @@ HAVING
 	COUNT(proj.pnum) > 1
 
 --------------------------------------------------------------------------------
--- 14.  Para  cada  projeto  obtenha  o  número  de  empregados  que  trabalha  no  projeto  e  o  total  de  horas alocada para o projeto.
+-- 14.  Para  cada  projeto  obtenha  o  nÃºmero  de  empregados  que  trabalha  no  projeto  e  o  total  de  horas alocada para o projeto.
 SELECT 
 	proj.pnome PROJETO, 
 	COUNT(workon.proj) QTD_EMPREGADOS,
@@ -157,7 +181,7 @@ GROUP BY
 	proj.pnome
 
 --------------------------------------------------------------------------------
--- 15.  Para cada projeto que tem mais de 3 empregados alocados, obtenha a média de horas que os empregados trabalham no projeto.
+-- 15.  Para cada projeto que tem mais de 3 empregados alocados, obtenha a mÃ©dia de horas que os empregados trabalham no projeto.
 SELECT 
 	proj.pnome PROJETO, 
 	COUNT(workon.proj) QTD_EMPREGADOS,
@@ -171,7 +195,7 @@ HAVING
 	COUNT(workon.proj) >= 3
 
 --------------------------------------------------------------------------------
--- 16. Obtenha os projetos que tem mais empregados do que a média dos empregados de todos os projetos e o total de horas alocadas maior do que a média de horas de todos os projetos.
+-- 16. Obtenha os projetos que tem mais empregados do que a mÃ©dia dos empregados de todos os projetos e o total de horas alocadas maior do que a mÃ©dia de horas de todos os projetos.
 
 
 --------------------------------------------------------------------------------
